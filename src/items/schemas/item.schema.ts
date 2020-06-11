@@ -22,4 +22,5 @@ export class Item extends Document {
     image: string;
 }
 
+
 export const ItemSchema = SchemaFactory.createForClass(Item);

@@ -1,14 +1,20 @@
+import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator';
+
 export class CreateItemDto {
-    name: string;
-    price: number;
-    description: string;
-    image: string;
+    @IsString() @IsOptional() readonly id: string;
+    @IsString() @IsNotEmpty() readonly name: string;
+    @IsNumber() @IsNotEmpty() readonly price: number;
+    @IsNumber() @IsNotEmpty() readonly discount: number;
+    @IsString() readonly description: string;
+    @IsString() @IsNotEmpty() readonly image: string;
 }
 export class UpdateItemDto {
-    name: string;
-    price: number;
-    description: string;
-    image: string;
+    @IsString() @IsOptional() readonly id: string;
+    @IsString() @IsNotEmpty() readonly name: string;
+    @IsNumber() @IsNotEmpty() readonly price: number;
+    @IsNumber() @IsNotEmpty() readonly discount: number;
+    @IsString() readonly description: string;
+    @IsString() @IsNotEmpty() readonly image: string;
 }
 
 export class CriteriasDto {
