@@ -27,37 +27,17 @@ export class ItemsService {
     }
 
     async findById (id: string): Promise<Item> {
-        const item = await this.itemModel.findById(id, function (error, item) {
-            if (error) {
-                return new Error('No record found');
-            }
-            if (!item) {
-                return 'No record found one';
-            }
-        });
-
-        return item
-
+        return await this.itemModel.findOne({ _id: id });
     }
 
     async update (id: string, updatedItem: UpdateItemDto): Promise<Item> {
-        const item = await this.itemModel.findByIdAndUpdate(id, updatedItem, { new: true }, function (error, item) {
-            if (error) {
-                throw new Error('No record found to update');
-            }
-            return item;
-        });
-        return item;
+        console.log(id)
+        await this.itemModel.update({ _id: id }, updatedItem);
+        return await this.itemModel.findOne({ _id: id });
     }
 
-    async delete (id: string): Promise<Item> {
-
-        return await this.itemModel.findByIdAndRemove(id, function (error, item) {
-            if (error) {
-                throw new Error('No record found to delete');
-            }
-            return item;
-        })
-
+    async delete (id: string): Promise<boolean> {
+        await this.itemModel.deleteOne({ _id: id });
+        return true
     }
 }

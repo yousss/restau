@@ -33,13 +33,13 @@ export class ItemsController {
         return await this.itemsService.create(item);
     }
 
-    @Put()
+    @Put(':id')
     async update (@Param('id') id: string, @Body() item: UpdateItemDto): Promise<Item> {
         return await this.itemsService.update(id, item);
     }
 
     @Delete(':id')
-    async delete (@Param('id') id: string): Promise<Item> {
+    async delete (@Param('id') id: string): Promise<boolean> {
         return await this.itemsService.delete(id);
     }
 }
