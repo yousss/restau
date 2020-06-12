@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreateItemDto, UpdateItemDto, CriteriasDto } from './dto/index'
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ItemDTO, CriteriasDto } from './dto/index'
 import { Item as ItemModel } from './schemas/item.schema'
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -7,6 +7,7 @@ import { Item } from './interfaces/item.interface';
 
 @Injectable()
 export class ItemsService {
+
     constructor(@InjectModel(ItemModel.name) private itemModel: Model<ItemModel>) { }
 
     async findAll (clauses: CriteriasDto): Promise<Item[]> {
@@ -21,23 +22,33 @@ export class ItemsService {
             .sort({ name: clauses.orderByType || 'asc' });
     }
 
-    async create (newItem: CreateItemDto): Promise<Item> {
+    async create (newItem: ItemDTO): Promise<Item> {
         const createdItem = new this.itemModel(newItem);
         return await createdItem.save();
     }
 
     async findById (id: string): Promise<Item> {
-        return await this.itemModel.findOne({ _id: id });
+        const item = await this.itemModel.findOne({ _id: id });
+        if (!item) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return item;
     }
 
-    async update (id: string, updatedItem: UpdateItemDto): Promise<Item> {
-        console.log(id)
-        await this.itemModel.update({ _id: id }, updatedItem);
+    async update (id: string, updatedItem: Partial<ItemDTO>): Promise<Item> {
+        const item = await this.itemModel.findOne({ _id: id });
+        if (!item) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        await this.itemModel.updateOne({ _id: id }, updatedItem);
         return await this.itemModel.findOne({ _id: id });
     }
 
     async delete (id: string): Promise<boolean> {
-        await this.itemModel.deleteOne({ _id: id });
-        return true
+        const { deletedCount } = await this.itemModel.deleteOne({ _id: id });
+        if (deletedCount !== 0)
+            return true
+
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 }

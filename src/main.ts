@@ -1,8 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import { ValidationPipe } from '@nestjs/common';
-import { CommonLoggerService } from './loggers/common.logger.service'
 
 
 dotenv.config();
@@ -11,8 +9,7 @@ async function bootstrap () {
   const app = await NestFactory.create(AppModule, {
     logger: false
   });
-  app.useLogger(app.get(CommonLoggerService))
-  app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT);
+
+  await app.listen(process.env.PORT || 7000);
 }
 bootstrap();

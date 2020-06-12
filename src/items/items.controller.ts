@@ -6,16 +6,20 @@ import {
     Param,
     Post,
     Put,
-    Query
+    Query,
+    UsePipes,
+    Logger
 } from '@nestjs/common';
-import { CreateItemDto, UpdateItemDto, CriteriasDto } from './dto'
+import { ItemDTO, CriteriasDto } from './dto'
 import { ItemsService } from './items.service';
 import { Item } from './interfaces/item.interface';
+import { ValidationPipe } from 'src/shared/validation.pipe';
 
 
 
 @Controller('items')
 export class ItemsController {
+    private logger = new Logger('items');
     constructor(private readonly itemsService: ItemsService) { }
 
     @Get()
@@ -29,12 +33,16 @@ export class ItemsController {
     }
 
     @Post()
-    async create (@Body() item: CreateItemDto): Promise<Item> {
+    @UsePipes(new ValidationPipe())
+    async create (@Body() item: ItemDTO): Promise<Item> {
+        this.logger.log(JSON.stringify(item));
         return await this.itemsService.create(item);
     }
 
     @Put(':id')
-    async update (@Param('id') id: string, @Body() item: UpdateItemDto): Promise<Item> {
+    @UsePipes(new ValidationPipe())
+    async update (@Param('id') id: string, @Body() item: Partial<ItemDTO>): Promise<Item> {
+        this.logger.log(JSON.stringify(item));
         return await this.itemsService.update(id, item);
     }
 
