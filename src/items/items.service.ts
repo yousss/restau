@@ -36,12 +36,11 @@ export class ItemsService {
     }
 
     async update (id: string, updatedItem: Partial<ItemDTO>): Promise<Item> {
-        const item = await this.itemModel.findOne({ _id: id });
-        if (!item) {
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        const { modifiedCount } = await this.itemModel.updateOne({ _id: id }, updatedItem);
+        if (modifiedCount !== 0) {
+            return await this.itemModel.findOne({ _id: id });
         }
-        await this.itemModel.updateOne({ _id: id }, updatedItem);
-        return await this.itemModel.findOne({ _id: id });
+        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
     async delete (id: string): Promise<boolean> {
@@ -49,6 +48,5 @@ export class ItemsService {
         if (deletedCount !== 0)
             return true
 
-        throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 }
