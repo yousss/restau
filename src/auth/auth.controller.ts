@@ -14,7 +14,9 @@ export class AuthController {
     async signUp (
         @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto
     ): Promise<any> {
-        return this.authService.signUp(authCredentialsDto);
+        const auth = await this.authService.signUp(authCredentialsDto);
+        delete auth['password'];
+        return auth
     }
 
     @UseGuards(LocalAuthGuard)

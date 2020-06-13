@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
+import { ProfilesModule } from './profiles/profiles.module';
+import { ProfileController } from './profile/profile.controller';
 
 
 
@@ -19,9 +21,10 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
     }),
     AuthModule,
     UsersModule,
-    ItemsModule
+    ItemsModule,
+    ProfilesModule
   ],
-  controllers: [],
+  controllers: [ProfileController],
   providers: [
     {
       provide: APP_FILTER,
