@@ -1,4 +1,4 @@
-import { IsString, MinLength, MaxLength } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export class AuthCredentialsDto {
     @IsString()
@@ -11,11 +11,3 @@ export class AuthCredentialsDto {
     @MaxLength(20, { message: 'Password is too long (20 characters max)' })
     password: string;
 }
-
-export class CriteriaDto {
-    limit: number;
-    orderByType: string;
-    perPage: number;
-    pageNumber: number;
-}
-

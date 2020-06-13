@@ -12,10 +12,14 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 
 @Module({
   imports: [
-    ItemsModule,
-    MongooseModule.forRoot(config.mongooseUri),
+    MongooseModule.forRoot(config.mongooseUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    }),
     AuthModule,
-    UsersModule
+    UsersModule,
+    ItemsModule
   ],
   controllers: [],
   providers: [
